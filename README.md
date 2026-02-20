@@ -6,12 +6,12 @@ Converts MathML equations inside EPUB XHTML/HTML files into PNG images or inline
 
 Download a prebuilt binary from the GitHub Releases page:
 
-- `https://github.com/hsnfirdaus/epub-mathml-converter/releases`
+- [https://github.com/hsnfirdaus/epub-mathml-converter/releases](https://github.com/hsnfirdaus/epub-mathml-converter/releases)
 
 Then run:
 
 ```bash
-./epub-mathml-converter <input.epub> [output.epub] [--format png|svg]
+./epub-mathml-converter <input.epub> [output.epub] [--format png|svg] [--concurrency N|auto]
 ```
 
 Examples:
@@ -21,6 +21,8 @@ Examples:
 ./epub-mathml-converter tes.epub tes-kindle.epub
 ./epub-mathml-converter tes.epub --format svg
 ./epub-mathml-converter tes.epub tes-kindle.svg.epub --format svg
+./epub-mathml-converter tes.epub --format png --concurrency auto
+./epub-mathml-converter tes.epub --format png --concurrency 4
 ```
 
 If output is omitted, it writes to:
@@ -29,12 +31,13 @@ If output is omitted, it writes to:
 
 `--format` defaults to `png`.
 
+`--concurrency` controls how many XHTML files are processed at once (default: `auto`, based on CPU parallelism).
+
 ## From Source
 
 ### Requirements
 
 - [Bun](https://bun.sh)
-- `unzip` and `zip` commands available in `PATH` (usually preinstalled on Linux/macOS)
 
 ### Install
 
@@ -53,18 +56,19 @@ This creates a standalone executable named `epub-mathml-converter`.
 Run it directly:
 
 ```bash
-./epub-mathml-converter <input.epub> [output.epub] [--format png|svg]
+./epub-mathml-converter <input.epub> [output.epub] [--format png|svg] [--concurrency N|auto]
 ```
 
 ### Script Usage (Without Compiling)
 
 ```bash
-bun run src/index.ts <input.epub> [output.epub] [--format png|svg]
+bun run src/index.ts <input.epub> [output.epub] [--format png|svg] [--concurrency N|auto]
 ```
 
 ## What it does
 
 1. Unzips the EPUB to a temp folder.
+	- Uses built-in cross-platform ZIP handling (`yauzl`/`yazl`), no external `zip`/`unzip` tools required.
 2. Scans all `.xhtml`, `.html`, `.htm` files.
 3. Converts each `<math>` node depending on format:
 	- `png`: MathJax → SVG → PNG and injects `<img src="data:image/png;base64,...">`
