@@ -1,0 +1,20 @@
+{
+  "name": "epub-mathml-svg",
+  "version": "0.1.0",
+  "description": "Convert MathML inside EPUB XHTML to PNG/SVG for better Kindle compatibility",
+  "type": "module",
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir dist --target bun",
+    "build:bin": "bun build ./src/index.ts --compile --outfile epub-mathml-converter",
+    "start": "bun run src/index.ts",
+    "convert": "bun run src/index.ts"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "mathjax-full": "^3.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3"
+  }
+}
