@@ -23,11 +23,20 @@ function looksLikeScriptPath(value: string): boolean {
   );
 }
 
+function isBunVirtualPath(value: string): boolean {
+  const normalized = value.replace(/\\/g, "/").toLowerCase();
+  return normalized.startsWith("/$bunfs/") || normalized.includes("/$bunfs/");
+}
+
 function getCliArgs(argv: string[]): string[] {
   const executableName = getExecutableName(argv[0] ?? "").toLowerCase();
   const originalExecutableName = getExecutableName(process.argv0 ?? "").toLowerCase();
   const isBunOrNode = executableName.includes("bun") || executableName.startsWith("node");
   const second = argv[1] ?? "";
+
+  if (isBunVirtualPath(second)) {
+    return argv.slice(2);
+  }
 
   const isBunCompiledWrapper =
     executableName.includes("bun") &&
